@@ -143,8 +143,8 @@ class RdataTB {
         <table id="C" border="0" style="width:100%;margin-bottom:12px;">
         <tr>
           <td style="width:100%;">
-             <div class="${(_a = this.classList.selectParent) !== null && _a !== void 0 ? _a : ''}">
-                <select id="data-tb-select" class="${(_b = this.classList.select) !== null && _b !== void 0 ? _b : ''}" style="float:left;width:99px!important;margin-right:10px;">
+             <div class="${(_a = this.classList.selectParent) !== null && _a !== void 0 ? _a : ''}" style="float:left;margin-right:10px;">
+                <select id="data-tb-select" class="${(_b = this.classList.select) !== null && _b !== void 0 ? _b : ''}">
                     <option value="5">5</option><option value="10">10</option><option value="20">20</option><option value="50">50</option>
                 </select>
              </div>
