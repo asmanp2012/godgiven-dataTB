@@ -20,6 +20,12 @@ class RdataTB {
         ShowTfoot: true,
         ExcludeColumnExport: [] }) {
         var _a, _b, _c, _d;
+        this.classList = {
+            layout: 'table_layout_fixed',
+            select: 'form-select shadow-none',
+            searchControl: 'form-control shadow-none',
+            columnsHeader: 'columns tablesorter-header',
+        }; // all of the class that uses in dataTB
         this.HeaderDataTable = []; // header table to array
         this.RowDataTable = []; // get Table to json
         this.DataTable = [];
@@ -53,7 +59,7 @@ class RdataTB {
             this.JSONinit(Options.RenderJSON);
         }
         if (!Options.ShowSelect && Options.hasOwnProperty('ShowSelect')) {
-            (_a = document.getElementById('my-select')) === null || _a === void 0 ? void 0 : _a.remove();
+            (_a = document.getElementById('data-tb-select')) === null || _a === void 0 ? void 0 : _a.remove();
         }
         this.ShowHighlight = Options === null || Options === void 0 ? void 0 : Options.ShowHighlight;
         if (Options.fixedTable && Options.hasOwnProperty('fixedTable')) {
@@ -72,6 +78,13 @@ class RdataTB {
         if (Options.SelectionNumber != null && Options.hasOwnProperty('SelectionNumber')) {
             this.SelectionNumber = Options.SelectionNumber;
             this.ChangeSelect();
+        }
+        if(Options.classList != null)
+        {
+            this.classList = {
+                ...this.classList,
+                ...Options.classList
+            }
         }
         this.totalPages = this.Divide().length;
     }
@@ -134,7 +147,7 @@ class RdataTB {
         for (let x = 0; x < this.SelectionNumber.length; x++) {
             this.SelectElementString += `<option value="${this.SelectionNumber[x]}">${this.SelectionNumber[x]}</option>`;
         }
-        let ElSelect = document.getElementById("my-select");
+        let ElSelect = document.getElementById("data-tb-select");
         if (ElSelect) {
             ElSelect.innerHTML = this.SelectElementString;
         }
@@ -146,10 +159,13 @@ class RdataTB {
         <table id="C" border="0" style="width:100%;margin-bottom:12px;">
         <tr>
           <td style="width:100%;">
-             <select id="my-select" class="form-select shadow-none" style="float:left;width:99px!important;margin-right:10px;">
-             <option value="5">5</option><option value="10">10</option><option value="20">20</option><option value="50">50</option>
+             <select id="data-tb-select" class="${this.classList.select}" style="float:left;width:99px!important;margin-right:10px;">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
              </select>
-             <input id="SearchControl" class="form-control shadow-none" placeholder="Search" type="text" style="width:30%;margin-left:10px">
+             <input id="SearchControl" class="${this.classList.searchControl}" placeholder="Search" type="text" style="width:30%;margin-left:10px">
           </td>
         </tr>
       </table>
@@ -162,7 +178,7 @@ class RdataTB {
             this.i = 0;
             this.RenderToHTML();
         };
-        let selectEl = document.getElementById('my-select');
+        let selectEl = document.getElementById('data-tb-select');
         selectEl === null || selectEl === void 0 ? void 0 : selectEl.addEventListener('change', function () {
             ChangeV(this.value);
         });
@@ -272,8 +288,8 @@ class RdataTB {
         let header = '';
         let footer = '';
         for (let I = 0; I < this.HeaderDataTable.length; I++) {
-            header += `<th style="cursor: pointer;" id="${this.HeaderDataTable[I]}_header" class="columns tablesorter-header">${this.HeaderDataTable[I]}</th>\n`;
-            footer += `<th style="cursor: pointer;" id="${this.HeaderDataTable[I]}_footer" class="columns tablesorter-header">${this.HeaderDataTable[I]}</th>\n`;
+            header += `<th style="cursor: pointer;" id="${this.HeaderDataTable[I]}_header" class="${this.classList.columnsHeader}">${this.HeaderDataTable[I]}</th>\n`;
+            footer += `<th style="cursor: pointer;" id="${this.HeaderDataTable[I]}_footer" class="${this.classList.columnsHeader}">${this.HeaderDataTable[I]}</th>\n`;
         }
         // RowDataTable To Element
         const ifUndefinded = (this.DataToRender === undefined) ? 0 : this.DataToRender.length;
