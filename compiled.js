@@ -150,9 +150,10 @@ var RdataTB = /*#__PURE__*/function () {
     key: "Control",
     value: function Control() {
       var _this$classList$selec,
+        _this$classList$selec2,
         _this = this;
       var span1 = document.createElement('span');
-      span1.innerHTML = "\n        <table id=\"C\" border=\"0\" style=\"width:100%;margin-bottom:12px;\">\n        <tr>\n          <td style=\"width:100%;\">\n             <select id=\"data-tb-select\" class=\"".concat((_this$classList$selec = this.classList.select) !== null && _this$classList$selec !== void 0 ? _this$classList$selec : '', "\" style=\"float:left;width:99px!important;margin-right:10px;\">\n             <option value=\"5\">5</option><option value=\"10\">10</option><option value=\"20\">20</option><option value=\"50\">50</option>\n             </select>\n             <input id=\"SearchControl\" class=\"").concat(this.classList.searchControl, "\" placeholder=\"Search\" type=\"text\" style=\"width:30%;margin-left:10px\">\n          </td>\n        </tr>\n      </table>\n        ");
+      span1.innerHTML = "\n        <table id=\"C\" border=\"0\" style=\"width:100%;margin-bottom:12px;\">\n        <tr>\n          <td style=\"width:100%;\">\n             <div class=\"".concat((_this$classList$selec = this.classList.selectParent) !== null && _this$classList$selec !== void 0 ? _this$classList$selec : '', "\">\n                <select id=\"data-tb-select\" class=\"").concat((_this$classList$selec2 = this.classList.select) !== null && _this$classList$selec2 !== void 0 ? _this$classList$selec2 : '', "\" style=\"float:left;width:99px!important;margin-right:10px;\">\n                    <option value=\"5\">5</option><option value=\"10\">10</option><option value=\"20\">20</option><option value=\"50\">50</option>\n                </select>\n             </div>\n             <input id=\"SearchControl\" class=\"").concat(this.classList.searchControl, "\" placeholder=\"Search\" type=\"text\" style=\"width:30%;margin-left:10px\">\n          </td>\n        </tr>\n      </table>\n        ");
       span1.className = 'Selc';
       this.TableElement.parentNode.insertBefore(span1, this.TableElement);
       this.TableElement.style.width = '100%';
