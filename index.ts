@@ -7,7 +7,12 @@
  * 
  * 
  */
-
+interface ClassListType extends Record<string, string | undefined> {
+    layout?: string,
+    select?: string,
+    searchControl?: string,
+    columnsHeader?: string
+}
 
 interface IOptions{
     RenderJSON: Array<any> | null,
@@ -20,8 +25,8 @@ interface IOptions{
     ShowHighlight:boolean,
     fixedTable:boolean,
     sortAnimate:boolean,
-    ExcludeColumnExport:Array<any>
-
+    ExcludeColumnExport:Array<any>,
+    classList?: ClassListType
 }
 
 interface IListtyped{
@@ -53,6 +58,7 @@ class RdataTB  {
     PageNow: number = 1;
     totalPages: number;
     ExcludeColumnExport:Array<any> = [];
+    classList: ClassListType = {};
 
     constructor(IdTable:string,Options:IOptions = {RenderJSON:null,
         ShowSearch:true,
@@ -64,9 +70,18 @@ class RdataTB  {
         fixedTable:false,
         sortAnimate:true,
         ShowTfoot:true,
-        ExcludeColumnExport:[]}) {
+        ExcludeColumnExport:[],
+        classList: {}
+    }) {
+        this.classList = {
+            layout: 'table_layout_fixed',
+            select: 'form-select shadow-none',
+            searchControl: 'form-control shadow-none',
+            columnsHeader: 'columns tablesorter-header',
+            ...Options.classList
+        }
         this.TableElement = document.getElementById(IdTable)
-        this.Options = Options
+        this.Options = Options;
         this.detectTyped()
         this.StyleS();
         this.ConvertToJson()
@@ -82,7 +97,7 @@ class RdataTB  {
         }
 
         if (!Options.ShowSelect && Options.hasOwnProperty('ShowSelect')) {
-                document.getElementById('my-select')?.remove()
+                document.getElementById('data-tb-select')?.remove()
         }
 
             this.ShowHighlight = Options?.ShowHighlight!
@@ -168,7 +183,7 @@ class RdataTB  {
         for (let x = 0; x < this.SelectionNumber.length; x++) {
             this.SelectElementString += `<option value="${this.SelectionNumber[x]}">${this.SelectionNumber[x]}</option>`
         }
-        let ElSelect:HTMLElement = document.getElementById("my-select")!
+        let ElSelect:HTMLElement = document.getElementById("data-tb-select")!
         if(ElSelect){
             ElSelect.innerHTML = this.SelectElementString
         }
@@ -182,10 +197,10 @@ class RdataTB  {
         <table id="C" border="0" style="width:100%;margin-bottom:12px;">
         <tr>
           <td style="width:100%;">
-             <select id="my-select" class="form-select shadow-none" style="float:left;width:99px!important;margin-right:10px;">
+             <select id="data-tb-select" class="${this.classList.select ?? ''}" style="float:left;width:99px!important;margin-right:10px;">
              <option value="5">5</option><option value="10">10</option><option value="20">20</option><option value="50">50</option>
              </select>
-             <input id="SearchControl" class="form-control shadow-none" placeholder="Search" type="text" style="width:30%;margin-left:10px">
+             <input id="SearchControl" class="${this.classList.searchControl}" placeholder="Search" type="text" style="width:30%;margin-left:10px">
           </td>
         </tr>
       </table>
@@ -199,7 +214,7 @@ class RdataTB  {
             this.i = 0
             this.RenderToHTML()
         }
-        let selectEl:HTMLInputElement = <HTMLInputElement>document.getElementById('my-select')
+        let selectEl:HTMLInputElement = <HTMLInputElement>document.getElementById('data-tb-select')
                         selectEl?.addEventListener('change', function(){
                         ChangeV(this.value)
         })
@@ -309,7 +324,7 @@ class RdataTB  {
         //clear 
         this.TableElement!.innerHTML = ''
         // check if is sorted
-        const CheckIFSorted = (this.DataSorted === null || this.DataSorted === [] || this.DataSorted ===  undefined )? 
+        const CheckIFSorted = (this.DataSorted == null || this.DataSorted === ([]))? 
         this.Divide()[0] 
         : this.Divide()[0];
         this.DataToRender = CheckIFSorted
@@ -317,8 +332,8 @@ class RdataTB  {
         let header:string = ''
         let footer:string = ''
         for (let I = 0; I < this.HeaderDataTable.length; I++) {
-            header +=`<th style="cursor: pointer;" id="${this.HeaderDataTable[I]}_header" class="columns tablesorter-header">${this.HeaderDataTable[I]}</th>\n`;
-            footer +=`<th style="cursor: pointer;" id="${this.HeaderDataTable[I]}_footer" class="columns tablesorter-header">${this.HeaderDataTable[I]}</th>\n`;
+            header +=`<th style="cursor: pointer;" id="${this.HeaderDataTable[I]}_header" class="${this.classList.columnsHeader}">${this.HeaderDataTable[I]}</th>\n`;
+            footer +=`<th style="cursor: pointer;" id="${this.HeaderDataTable[I]}_footer" class="${this.classList.columnsHeader}">${this.HeaderDataTable[I]}</th>\n`;
         }
         // RowDataTable To Element
         const ifUndefinded = (this.DataToRender === undefined) ? 0 : this.DataToRender.length

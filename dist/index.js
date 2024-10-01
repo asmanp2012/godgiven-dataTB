@@ -14,6 +14,7 @@ class RdataTB {
         ShowPaginate: true,
         SelectionNumber: [5, 10, 20, 50],
         HideColumn: [],
+        classList: {},
         ShowHighlight: false,
         fixedTable: false,
         sortAnimate: true,
