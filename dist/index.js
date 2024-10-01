@@ -1,12 +1,4 @@
 "use strict";
-/**
- *
- *
- * By Rakhmadi (c) 2021
- * Under the MIT License.
- *
- *
- */
 class RdataTB {
     constructor(IdTable, Options = { RenderJSON: null,
         ShowSearch: true,
@@ -14,19 +6,14 @@ class RdataTB {
         ShowPaginate: true,
         SelectionNumber: [5, 10, 20, 50],
         HideColumn: [],
-        classList: {},
         ShowHighlight: false,
         fixedTable: false,
         sortAnimate: true,
         ShowTfoot: true,
-        ExcludeColumnExport: [] }) {
+        ExcludeColumnExport: [],
+        classList: {}
+    }) {
         var _a, _b, _c, _d;
-        this.classList = {
-            layout: 'table_layout_fixed',
-            select: 'form-select shadow-none',
-            searchControl: 'form-control shadow-none',
-            columnsHeader: 'columns tablesorter-header',
-        }; // all of the class that uses in dataTB
         this.HeaderDataTable = []; // header table to array
         this.RowDataTable = []; // get Table to json
         this.DataTable = [];
@@ -46,6 +33,8 @@ class RdataTB {
         this.listTypeDate = [];
         this.PageNow = 1;
         this.ExcludeColumnExport = [];
+        this.classList = {};
+        this.classList = Object.assign({ layout: 'table_layout_fixed', select: 'form-select shadow-none', searchControl: 'form-control shadow-none', columnsHeader: 'columns tablesorter-header' }, Options.classList);
         this.TableElement = document.getElementById(IdTable);
         this.Options = Options;
         this.detectTyped();
@@ -79,13 +68,6 @@ class RdataTB {
         if (Options.SelectionNumber != null && Options.hasOwnProperty('SelectionNumber')) {
             this.SelectionNumber = Options.SelectionNumber;
             this.ChangeSelect();
-        }
-        if(Options.classList != null)
-        {
-            this.classList = {
-                ...this.classList,
-                ...Options.classList
-            }
         }
         this.totalPages = this.Divide().length;
     }
@@ -155,16 +137,14 @@ class RdataTB {
         return this.SelectElementString;
     }
     Control() {
+        var _a;
         const span1 = document.createElement('span');
         span1.innerHTML = `
         <table id="C" border="0" style="width:100%;margin-bottom:12px;">
         <tr>
           <td style="width:100%;">
-             <select id="data-tb-select" class="${this.classList.select}" style="float:left;width:99px!important;margin-right:10px;">
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
+             <select id="data-tb-select" class="${(_a = this.classList.select) !== null && _a !== void 0 ? _a : ''}" style="float:left;width:99px!important;margin-right:10px;">
+             <option value="5">5</option><option value="10">10</option><option value="20">20</option><option value="50">50</option>
              </select>
              <input id="SearchControl" class="${this.classList.searchControl}" placeholder="Search" type="text" style="width:30%;margin-left:10px">
           </td>
@@ -281,7 +261,7 @@ class RdataTB {
         //clear 
         this.TableElement.innerHTML = '';
         // check if is sorted
-        const CheckIFSorted = (this.DataSorted === null || this.DataSorted === [] || this.DataSorted === undefined) ?
+        const CheckIFSorted = (this.DataSorted == null || this.DataSorted === ([])) ?
             this.Divide()[0]
             : this.Divide()[0];
         this.DataToRender = CheckIFSorted;
