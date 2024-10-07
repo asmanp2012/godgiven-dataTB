@@ -574,7 +574,7 @@ class RdataTB  {
         }
         
         const element = document.createElement('a')!;
-        element.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(str);
+        element.href = 'data:text/csv;charset=utf-8,' + "\uFEFF" + encodeURIComponent(str);
         element.target = '_blank';
         element.download = filename + '.csv';
         element.click();
@@ -601,7 +601,7 @@ class RdataTB  {
         }
         
         const element = document.createElement('a')!;
-        element.href = 'data:text/xlsx;charset=utf-8,' + encodeURIComponent(str);
+        element.href = 'data:text/xlsx;charset=utf-8,' + "\uFEFF" + encodeURIComponent(str);
         element.target = '_blank';
         element.download = filename + '.xlsx';
         element.click();
@@ -616,7 +616,7 @@ class RdataTB  {
         let data = this.MExcludeColumnExport();
 
         const element = document.createElement('a')!;
-        element.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data.data));
+        element.href = 'data:text/json;charset=utf-8,' + "\uFEFF" + encodeURIComponent(JSON.stringify(data.data));
         element.target = '_blank';
         element.download = filename + '.json';
         element.click();
