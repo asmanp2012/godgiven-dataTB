@@ -19,26 +19,6 @@ interface ClassListType extends Record<string, string | undefined> {
     paginationNext?: string
 }
 
-const dataTbThemeClass: Record<string, ClassListType> = {
-    'bootstrap': {
-        layout: 'table_layout_fixed',
-        select: 'form-select shadow-none',
-        searchControl: 'form-control shadow-none',
-        columnsHeader: 'columns tablesorter-header',
-        paginationParent: 'pagination',    
-    },
-    'bulma': {
-        select: '',
-        selectParent: 'select',
-        searchControl: 'input',
-        columnsHeader: 'tablesorter-header',
-        button: 'button',
-        paginationParent: 'pagination is-centered',
-        paginationPervious: 'pagination-previous',
-        paginationNext: 'pagination-next'
-    }
-}
-
 interface IOptions{
     RenderJSON: Array<any> | null,
     ShowSearch:boolean,
@@ -86,6 +66,25 @@ class RdataTB  {
     totalPages: number;
     ExcludeColumnExport:Array<any> = [];
     classList: ClassListType = {};
+    dataTbThemeClass: Record<string, ClassListType> = {
+        'bootstrap': {
+            layout: 'table_layout_fixed',
+            select: 'form-select shadow-none',
+            searchControl: 'form-control shadow-none',
+            columnsHeader: 'columns tablesorter-header',
+            paginationParent: 'pagination',    
+        },
+        'bulma': {
+            select: '',
+            selectParent: 'select',
+            searchControl: 'input',
+            columnsHeader: 'tablesorter-header',
+            button: 'button',
+            paginationParent: 'pagination is-centered',
+            paginationPervious: 'pagination-previous',
+            paginationNext: 'pagination-next'
+        }
+    }
 
     constructor(IdTable:string,Options:IOptions = {RenderJSON:null,
         ShowSearch:true,
@@ -103,7 +102,7 @@ class RdataTB  {
         classList: {}
     }) {
         this.classList = {
-            ...dataTbThemeClass[Options.theme],
+            ...this.dataTbThemeClass[Options.theme],
             ...Options.classList
         }
         this.TableElement = document.getElementById(IdTable)
@@ -285,7 +284,7 @@ class RdataTB  {
             }
             if(downloadEl.value === 'XLSX')
             {
-                this.DownloadCSV();
+                // this.DownloadEXCEL();
             }
             downloadEl.value = '';
         };

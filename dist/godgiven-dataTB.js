@@ -218,7 +218,7 @@ class RdataTB {
                 this.DownloadCSV();
             }
             if (downloadEl.value === 'XLSX') {
-                this.DownloadCSV();
+                this.DownloadEXCEL();
             }
             downloadEl.value = '';
         };
