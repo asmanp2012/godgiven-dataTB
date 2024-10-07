@@ -23,6 +23,26 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
  * 
  * 
  */
+
+var dataTbThemeClass = {
+  'bootstrap': {
+    layout: 'table_layout_fixed',
+    select: 'form-select shadow-none',
+    searchControl: 'form-control shadow-none',
+    columnsHeader: 'columns tablesorter-header',
+    paginationParent: 'pagination'
+  },
+  'bulma': {
+    select: '',
+    selectParent: 'select',
+    searchControl: 'input',
+    columnsHeader: 'tablesorter-header',
+    button: 'button',
+    paginationParent: 'pagination is-centered',
+    paginationPervious: 'pagination-previous',
+    paginationNext: 'pagination-next'
+  }
+};
 var RdataTB = /*#__PURE__*/function () {
   function RdataTB(IdTable) {
     var Options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
@@ -30,6 +50,8 @@ var RdataTB = /*#__PURE__*/function () {
       ShowSearch: true,
       ShowSelect: true,
       ShowPaginate: true,
+      ShowDownload: true,
+      theme: 'bootstrap',
       SelectionNumber: [5, 10, 20, 50],
       HideColumn: [],
       ShowHighlight: false,
@@ -67,12 +89,7 @@ var RdataTB = /*#__PURE__*/function () {
     _defineProperty(this, "totalPages", void 0);
     _defineProperty(this, "ExcludeColumnExport", []);
     _defineProperty(this, "classList", {});
-    this.classList = _objectSpread({
-      layout: 'table_layout_fixed',
-      select: 'form-select shadow-none',
-      searchControl: 'form-control shadow-none',
-      columnsHeader: 'columns tablesorter-header'
-    }, Options.classList);
+    this.classList = _objectSpread(_objectSpread({}, dataTbThemeClass[Options.theme]), Options.classList);
     this.TableElement = document.getElementById(IdTable);
     this.Options = Options;
     this.detectTyped();
@@ -151,9 +168,10 @@ var RdataTB = /*#__PURE__*/function () {
     value: function Control() {
       var _this$classList$selec,
         _this$classList$selec2,
+        _this$classList$selec3,
         _this = this;
       var span1 = document.createElement('span');
-      span1.innerHTML = "\n        <table id=\"C\" border=\"0\" style=\"width:100%;margin-bottom:12px;\">\n        <tr>\n          <td style=\"width:100%;\">\n             <div class=\"".concat((_this$classList$selec = this.classList.selectParent) !== null && _this$classList$selec !== void 0 ? _this$classList$selec : '', "\" style=\"float:left;margin-right:10px;\">\n                <select id=\"data-tb-select\" class=\"").concat((_this$classList$selec2 = this.classList.select) !== null && _this$classList$selec2 !== void 0 ? _this$classList$selec2 : '', "\">\n                    <option value=\"5\">5</option><option value=\"10\">10</option><option value=\"20\">20</option><option value=\"50\">50</option>\n                </select>\n             </div>\n             <input id=\"SearchControl\" class=\"").concat(this.classList.searchControl, "\" placeholder=\"Search\" type=\"text\" style=\"width:30%;margin-left:10px\">\n          </td>\n        </tr>\n      </table>\n        ");
+      span1.innerHTML = "\n        <table id=\"C\" border=\"0\" style=\"width:100%;margin-bottom:12px;\">\n        <tr>\n          <td style=\"width:100%;\">\n             <div class=\"".concat((_this$classList$selec = this.classList.selectParent) !== null && _this$classList$selec !== void 0 ? _this$classList$selec : '', "\" style=\"float:left;\">\n                <select id=\"data-tb-select\" class=\"").concat((_this$classList$selec2 = this.classList.select) !== null && _this$classList$selec2 !== void 0 ? _this$classList$selec2 : '', "\" style=\"margin-inline-start:10px;\">\n                    <option value=\"5\">5</option>\n                    <option value=\"10\">10</option>\n                    <option value=\"20\">20</option>\n                    <option value=\"50\">50</option>\n                </select>\n                ").concat(this.Options.ShowDownload === true ? "<select\n                        id=\"data-tb-select-download\"\n                        class=\"".concat((_this$classList$selec3 = this.classList.select) !== null && _this$classList$selec3 !== void 0 ? _this$classList$selec3 : '', "\"\n                        style=\"margin-inline-start:10px;\"\n                    >\n                        <option value=\"\">Download</option>\n                        <option>CSV</option>\n                        <option>XLSX</option>\n                    </select>") : "", "\n                    \n             </div>\n             \n             <input id=\"SearchControl\" class=\"").concat(this.classList.searchControl, "\" placeholder=\"Search\" type=\"text\" style=\"width:30%;margin-left:10px\">\n          </td>\n        </tr>\n      </table>\n        ");
       span1.className = 'Selc';
       this.TableElement.parentNode.insertBefore(span1, this.TableElement);
       this.TableElement.style.width = '100%';
@@ -175,6 +193,16 @@ var RdataTB = /*#__PURE__*/function () {
         _this.prevItem();
         _this.highlight(_this.searchValue);
         _this.DoHide();
+      };
+      var downloadEl = document.getElementById('data-tb-select-download');
+      downloadEl.onchange = function () {
+        if (downloadEl.value === 'CSV') {
+          _this.DownloadCSV();
+        }
+        if (downloadEl.value === 'XLSX') {
+          _this.DownloadCSV();
+        }
+        downloadEl.value = '';
       };
     }
   }, {
@@ -201,7 +229,8 @@ var RdataTB = /*#__PURE__*/function () {
   }, {
     key: "paginateRender",
     value: function paginateRender() {
-      var k = " <div class=\"pagination\" id=\"pgN\"><a id=\"x__PREV__X\" style=\"cursor:pointer;user-select: none;\">&laquo;</a><div id=\"PF\"></div><a id=\"x__NEXT__X\" style=\"cursor:pointer;user-select: none;\">&raquo;</a></div>";
+      var _this$classList$pagin, _this$classList$butto, _this$classList$butto2, _this$classList$pagin2;
+      var k = "<div class=\"".concat(this.classList.paginationParent, " ").concat((_this$classList$pagin = this.classList.paginationPervious) !== null && _this$classList$pagin !== void 0 ? _this$classList$pagin : '', "\" id=\"pgN\">\n            <a\n                class=\"").concat((_this$classList$butto = this.classList.button) !== null && _this$classList$butto !== void 0 ? _this$classList$butto : '', "\"\n                id=\"x__PREV__X\"\n                style=\"cursor:pointer;user-select: none;\"\n            >\n                &laquo;\n            </a>\n            <div id=\"PF\"></div>\n            <a\n                class=\"").concat((_this$classList$butto2 = this.classList.button) !== null && _this$classList$butto2 !== void 0 ? _this$classList$butto2 : '', " ").concat((_this$classList$pagin2 = this.classList.paginationNext) !== null && _this$classList$pagin2 !== void 0 ? _this$classList$pagin2 : '', "\"\n                id=\"x__NEXT__X\"\n                style=\"cursor:pointer;user-select: none;\"\n            >\n                &raquo;\n            </a>\n        </div>");
       var span = document.createElement('span');
       span.innerHTML = k;
       span.className = 'asterisk';
@@ -467,6 +496,34 @@ var RdataTB = /*#__PURE__*/function () {
       element.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(str);
       element.target = '_blank';
       element.download = filename + '.csv';
+      element.click();
+    }
+
+    /**
+     * 
+     * @param filename filename to download default is Export
+     * 
+     */
+  }, {
+    key: "DownloadEXCEL",
+    value: function DownloadEXCEL() {
+      var filename = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Export';
+      var data = this.MExcludeColumnExport();
+      var str = '';
+      var hed = data.header.toString();
+      str = hed + '\r\n';
+      for (var i = 0; i < data.data.length; i++) {
+        var line = '';
+        for (var index in data.data[i]) {
+          if (line != '') line += ',';
+          line += data.data[i][index];
+        }
+        str += line + '\r\n';
+      }
+      var element = document.createElement('a');
+      element.href = 'data:text/xlsx;charset=utf-8,' + encodeURIComponent(str);
+      element.target = '_blank';
+      element.download = filename + '.xlsx';
       element.click();
     }
 

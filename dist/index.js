@@ -1,9 +1,30 @@
 "use strict";
+const dataTbThemeClass = {
+    'bootstrap': {
+        layout: 'table_layout_fixed',
+        select: 'form-select shadow-none',
+        searchControl: 'form-control shadow-none',
+        columnsHeader: 'columns tablesorter-header',
+        paginationParent: 'pagination',
+    },
+    'bulma': {
+        select: '',
+        selectParent: 'select',
+        searchControl: 'input',
+        columnsHeader: 'tablesorter-header',
+        button: 'button',
+        paginationParent: 'pagination is-centered',
+        paginationPervious: 'pagination-previous',
+        paginationNext: 'pagination-next'
+    }
+};
 class RdataTB {
     constructor(IdTable, Options = { RenderJSON: null,
         ShowSearch: true,
         ShowSelect: true,
         ShowPaginate: true,
+        ShowDownload: true,
+        theme: 'bootstrap',
         SelectionNumber: [5, 10, 20, 50],
         HideColumn: [],
         ShowHighlight: false,
@@ -34,7 +55,7 @@ class RdataTB {
         this.PageNow = 1;
         this.ExcludeColumnExport = [];
         this.classList = {};
-        this.classList = Object.assign({ layout: 'table_layout_fixed', select: 'form-select shadow-none', searchControl: 'form-control shadow-none', columnsHeader: 'columns tablesorter-header' }, Options.classList);
+        this.classList = Object.assign(Object.assign({}, dataTbThemeClass[Options.theme]), Options.classList);
         this.TableElement = document.getElementById(IdTable);
         this.Options = Options;
         this.detectTyped();
@@ -137,17 +158,33 @@ class RdataTB {
         return this.SelectElementString;
     }
     Control() {
-        var _a, _b;
+        var _a, _b, _c;
         const span1 = document.createElement('span');
         span1.innerHTML = `
         <table id="C" border="0" style="width:100%;margin-bottom:12px;">
         <tr>
           <td style="width:100%;">
-             <div class="${(_a = this.classList.selectParent) !== null && _a !== void 0 ? _a : ''}" style="float:left;margin-right:10px;">
-                <select id="data-tb-select" class="${(_b = this.classList.select) !== null && _b !== void 0 ? _b : ''}">
-                    <option value="5">5</option><option value="10">10</option><option value="20">20</option><option value="50">50</option>
+             <div class="${(_a = this.classList.selectParent) !== null && _a !== void 0 ? _a : ''}" style="float:left;">
+                <select id="data-tb-select" class="${(_b = this.classList.select) !== null && _b !== void 0 ? _b : ''}" style="margin-inline-start:10px;">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
                 </select>
+                ${this.Options.ShowDownload === true
+            ? `<select
+                        id="data-tb-select-download"
+                        class="${(_c = this.classList.select) !== null && _c !== void 0 ? _c : ''}"
+                        style="margin-inline-start:10px;"
+                    >
+                        <option value="">Download</option>
+                        <option>CSV</option>
+                        <option>XLSX</option>
+                    </select>`
+            : ``}
+                    
              </div>
+             
              <input id="SearchControl" class="${this.classList.searchControl}" placeholder="Search" type="text" style="width:30%;margin-left:10px">
           </td>
         </tr>
@@ -175,6 +212,16 @@ class RdataTB {
             this.highlight(this.searchValue);
             this.DoHide();
         };
+        let downloadEl = document.getElementById('data-tb-select-download');
+        downloadEl.onchange = () => {
+            if (downloadEl.value === 'CSV') {
+                this.DownloadCSV();
+            }
+            if (downloadEl.value === 'XLSX') {
+                this.DownloadCSV();
+            }
+            downloadEl.value = '';
+        };
     }
     nextItem() {
         this.i = this.i + 1; // increase i by one
@@ -193,7 +240,24 @@ class RdataTB {
         this.RenderToHTML(this.COntrolDataArr);
     }
     paginateRender() {
-        const k = ` <div class="pagination" id="pgN"><a id="x__PREV__X" style="cursor:pointer;user-select: none;">&laquo;</a><div id="PF"></div><a id="x__NEXT__X" style="cursor:pointer;user-select: none;">&raquo;</a></div>`;
+        var _a, _b, _c, _d;
+        const k = `<div class="${this.classList.paginationParent} ${(_a = this.classList.paginationPervious) !== null && _a !== void 0 ? _a : ''}" id="pgN">
+            <a
+                class="${(_b = this.classList.button) !== null && _b !== void 0 ? _b : ''}"
+                id="x__PREV__X"
+                style="cursor:pointer;user-select: none;"
+            >
+                &laquo;
+            </a>
+            <div id="PF"></div>
+            <a
+                class="${(_c = this.classList.button) !== null && _c !== void 0 ? _c : ''} ${(_d = this.classList.paginationNext) !== null && _d !== void 0 ? _d : ''}"
+                id="x__NEXT__X"
+                style="cursor:pointer;user-select: none;"
+            >
+                &raquo;
+            </a>
+        </div>`;
         const span = document.createElement('span');
         span.innerHTML = k;
         span.className = 'asterisk';
@@ -430,6 +494,31 @@ class RdataTB {
         element.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(str);
         element.target = '_blank';
         element.download = filename + '.csv';
+        element.click();
+    }
+    /**
+     *
+     * @param filename filename to download default is Export
+     *
+     */
+    DownloadEXCEL(filename = 'Export') {
+        let data = this.MExcludeColumnExport();
+        let str = '';
+        let hed = data.header.toString();
+        str = hed + '\r\n';
+        for (let i = 0; i < data.data.length; i++) {
+            let line = '';
+            for (const index in data.data[i]) {
+                if (line != '')
+                    line += ',';
+                line += data.data[i][index];
+            }
+            str += line + '\r\n';
+        }
+        const element = document.createElement('a');
+        element.href = 'data:text/xlsx;charset=utf-8,' + encodeURIComponent(str);
+        element.target = '_blank';
+        element.download = filename + '.xlsx';
         element.click();
     }
     /**

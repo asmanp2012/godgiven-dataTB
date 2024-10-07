@@ -1,9 +1,10 @@
 {
   "name": "rdatatb",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Simple vanilla javascript datatable",
   "main": "./index.ts",
   "scripts": {
+    "w": "yarn watch",
     "watch": "babel --watch src ---out-dir lib --extensions '.js,.ts,.tsx,.jsx'",
     "build": "babel index.ts --out-file compiled.js",
     "tsc": "tsc"
