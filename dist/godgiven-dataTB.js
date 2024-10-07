@@ -293,14 +293,14 @@ class RdataTB {
         //get Header
         const getHead = (_a = this.TableElement) === null || _a === void 0 ? void 0 : _a.getElementsByTagName('th');
         for (let v = 0; v < getHead.length; v++) {
-            (_b = this.HeaderDataTable) === null || _b === void 0 ? void 0 : _b.push(getHead[v].textContent);
+            (_b = this.HeaderDataTable) === null || _b === void 0 ? void 0 : _b.push(getHead[v].innerText);
         }
         //get row data
         const getbody = (_c = this.TableElement) === null || _c === void 0 ? void 0 : _c.getElementsByTagName('tbody');
         for (let row = 0; row < ((getbody[0] === undefined) ? 0 : getbody[0].rows.length); row++) {
             const cellsD = [];
             for (let cellsIndex = 0; cellsIndex < getbody[0].rows[row].cells.length; cellsIndex++) {
-                cellsD.push(getbody[0].rows[row].cells[cellsIndex].innerHTML);
+                cellsD.push(getbody[0].rows[row].cells[cellsIndex].innerText);
             }
             this.RowDataTable.push(cellsD);
         }
@@ -492,7 +492,7 @@ class RdataTB {
             str += line + '\r\n';
         }
         const element = document.createElement('a');
-        element.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(str);
+        element.href = 'data:text/csv;charset=utf-8,' + "\uFEFF" + encodeURIComponent(str);
         element.target = '_blank';
         element.download = filename + '.csv';
         element.click();
@@ -517,7 +517,7 @@ class RdataTB {
             str += line + '\r\n';
         }
         const element = document.createElement('a');
-        element.href = 'data:text/xlsx;charset=utf-8,' + encodeURIComponent(str);
+        element.href = 'data:text/xlsx;charset=utf-8,' + "\uFEFF" + encodeURIComponent(str);
         element.target = '_blank';
         element.download = filename + '.xlsx';
         element.click();
@@ -530,7 +530,7 @@ class RdataTB {
     DownloadJSON(filename = 'Export') {
         let data = this.MExcludeColumnExport();
         const element = document.createElement('a');
-        element.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data.data));
+        element.href = 'data:text/json;charset=utf-8,' + "\uFEFF" + encodeURIComponent(JSON.stringify(data.data));
         element.target = '_blank';
         element.download = filename + '.json';
         element.click();
