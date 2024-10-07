@@ -230,23 +230,23 @@ class RdataTB  {
                     <option value="20">20</option>
                     <option value="50">50</option>
                 </select>
-                ${
-                    this.Options.ShowDownload === true
-                    ? `<select
-                        id="data-tb-select-download"
-                        class="${this.classList.select ?? ''}"
-                        style="margin-inline-start:10px;"
-                    >
-                        <option value="">Download</option>
-                        <option>CSV</option>
-                        <option>XLSX</option>
-                    </select>`
+            </div>
+            ${
+                this.Options.ShowDownload === true
+                    ? `<div class="${this.classList.selectParent ?? ''}" style="float:left; margin-inline-start:10px;">
+                        <select
+                            id="data-tb-select-download"
+                            class="${this.classList.select ?? ''}"
+                        >
+                            <option value="">Download</option>
+                            <option>CSV</option>
+                            <option>XLSX</option>
+                        </select>
+                    </div>`
                     : ``
-                }
-                    
-             </div>
+            }
              
-             <input id="SearchControl" class="${this.classList.searchControl}" placeholder="Search" type="text" style="width:30%;margin-left:10px">
+            <input id="SearchControl" class="${this.classList.searchControl}" placeholder="Search" type="text" style="width:30%;margin-left:10px">
           </td>
         </tr>
       </table>
@@ -531,7 +531,7 @@ class RdataTB  {
 
     MExcludeColumnExport():any{
         let DataTable:Array<any> = JSON.parse(JSON.stringify(this.DataTable));
-        let exlude = this.Options.ExcludeColumnExport
+        let exlude = [...this.Options.ExcludeColumnExport];
         let head = [...this.HeaderDataTable]
 
         for(let x = 0 ; x < exlude.length ; x++){
