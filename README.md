@@ -1,6 +1,8 @@
-## RdataTB
-simple vanilla javascript datatable 
-#### Setup
+# RdataTB
+
+simple vanilla javascript datatable
+
+## Setup
 
 ```html
 <script src="https://cdn.jsdelivr.net/gh/Rakhmadi/RdataTB@master/dist/index.js"></script>
@@ -9,8 +11,11 @@ simple vanilla javascript datatable
     let x = new RdataTB('youTableid');
 </script>
 ```
-#### Options 
+
+## Options
+
 You can enter options in the second parameter
+
 ```html
 <script>
     let x = new RdataTB('youTableid',{
@@ -18,6 +23,7 @@ You can enter options in the second parameter
 		ShowSearch:true, // show search field,
 		ShowSelect:true, // show show select,
 		ShowPaginate:true, // show paginate ,
+		ShowDownload: true, // show download ,
 		SelectionNumber:[5,10,20,50], //Change Option in Select
 		HideColumn:[], // Hide column
 		ShowHighlight:false, // show Highlight if search
@@ -28,7 +34,8 @@ You can enter options in the second parameter
 	});
 </script>
 ```
-#### Valid table syntax
+
+### Valid table syntax
 
 ```html
 <table id="myTable">
@@ -49,8 +56,11 @@ You can enter options in the second parameter
 	</tbody>
 </table>
 ```
-### Class RdataTB()
-#### Property
+
+## Class RdataTB()
+
+### Property
+
 | Property | Descriptions |
 |--|--|
 | ```DataTableRaw``` | Get table data in json format |
@@ -58,10 +68,12 @@ You can enter options in the second parameter
 |``` RowDataTable```|Get data in row table|
 |``` DataToRender```|Get the data displayed in the table|
 
-#### Methods 
+#### Methods
+
 |Name Methods  | Descriptions|
 |--|--|
 | ``` DownloadCSV('FileName'); ``` | Download table in csv format "default filename is Export" |
+| ``` DownloadEXCEL('FileName'); ``` | Download table in xlsx format "default filename is Export" |
 |``` DownloadJSON('FileName');```|Download table in Json format "default filename is Export"|
 |``` sort('columnName'); ```|Sort table by column asc and desc|
 |```nextItem();```|Get next page data|
