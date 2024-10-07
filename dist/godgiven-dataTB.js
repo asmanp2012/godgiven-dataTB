@@ -158,7 +158,7 @@ class RdataTB {
         return this.SelectElementString;
     }
     Control() {
-        var _a, _b, _c;
+        var _a, _b, _c, _d;
         const span1 = document.createElement('span');
         span1.innerHTML = `
         <table id="C" border="0" style="width:100%;margin-bottom:12px;">
@@ -171,21 +171,21 @@ class RdataTB {
                     <option value="20">20</option>
                     <option value="50">50</option>
                 </select>
-                ${this.Options.ShowDownload === true
-            ? `<select
-                        id="data-tb-select-download"
-                        class="${(_c = this.classList.select) !== null && _c !== void 0 ? _c : ''}"
-                        style="margin-inline-start:10px;"
-                    >
-                        <option value="">Download</option>
-                        <option>CSV</option>
-                        <option>XLSX</option>
-                    </select>`
+            </div>
+            ${this.Options.ShowDownload === true
+            ? `<div class="${(_c = this.classList.selectParent) !== null && _c !== void 0 ? _c : ''}" style="float:left; margin-inline-start:10px;">
+                        <select
+                            id="data-tb-select-download"
+                            class="${(_d = this.classList.select) !== null && _d !== void 0 ? _d : ''}"
+                        >
+                            <option value="">Download</option>
+                            <option>CSV</option>
+                            <option>XLSX</option>
+                        </select>
+                    </div>`
             : ``}
-                    
-             </div>
              
-             <input id="SearchControl" class="${this.classList.searchControl}" placeholder="Search" type="text" style="width:30%;margin-left:10px">
+            <input id="SearchControl" class="${this.classList.searchControl}" placeholder="Search" type="text" style="width:30%;margin-left:10px">
           </td>
         </tr>
       </table>
@@ -453,7 +453,7 @@ class RdataTB {
     }
     MExcludeColumnExport() {
         let DataTable = JSON.parse(JSON.stringify(this.DataTable));
-        let exlude = this.Options.ExcludeColumnExport;
+        let exlude = [...this.Options.ExcludeColumnExport];
         let head = [...this.HeaderDataTable];
         for (let x = 0; x < exlude.length; x++) {
             let indexHead = head.indexOf(exlude[x]);
