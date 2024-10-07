@@ -452,8 +452,9 @@ class RdataTB {
         return this.DataSorted;
     }
     MExcludeColumnExport() {
+        var _a;
         let DataTable = JSON.parse(JSON.stringify(this.DataTable));
-        let exlude = [...this.Options.ExcludeColumnExport];
+        let exlude = (_a = this.Options.ExcludeColumnExport) !== null && _a !== void 0 ? _a : [];
         let head = [...this.HeaderDataTable];
         for (let x = 0; x < exlude.length; x++) {
             let indexHead = head.indexOf(exlude[x]);

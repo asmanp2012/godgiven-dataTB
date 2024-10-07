@@ -531,7 +531,7 @@ class RdataTB  {
 
     MExcludeColumnExport():any{
         let DataTable:Array<any> = JSON.parse(JSON.stringify(this.DataTable));
-        let exlude = [...this.Options.ExcludeColumnExport];
+        let exlude = this.Options.ExcludeColumnExport ?? [];
         let head = [...this.HeaderDataTable]
 
         for(let x = 0 ; x < exlude.length ; x++){
