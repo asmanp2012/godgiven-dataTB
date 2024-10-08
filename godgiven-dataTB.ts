@@ -538,7 +538,7 @@ class RdataTB  {
             var tempDivElement = document.createElement("div");
             // Set the HTML content with the given value
             tempDivElement.innerHTML = item;
-            return tempDivElement.innerText;
+            return tempDivElement.innerText.trim();
         });
         for(let x = 0 ; x < exlude.length ; x++){
             let indexHead = head.indexOf(exlude[x])
@@ -552,11 +552,12 @@ class RdataTB  {
              for (let n = 0; n < exlude.length; n++) {
                  delete DataTable[x][exlude[n]]
              }
-             DataTable[x] = DataTable[x].map((item: string) => {
+             
+             Object.keys(DataTable[x]).forEach((item: string) => {
                 var tempDivElement = document.createElement("div");
                 // Set the HTML content with the given value
-                tempDivElement.innerHTML = item;
-                return tempDivElement.innerText;
+                tempDivElement.innerHTML = DataTable[x][item];
+                DataTable[x][item] = tempDivElement.innerText.trim();
              });
         }
         return {
