@@ -1,23 +1,4 @@
 "use strict";
-const dataTbThemeClass = {
-    'bootstrap': {
-        layout: 'table_layout_fixed',
-        select: 'form-select shadow-none',
-        searchControl: 'form-control shadow-none',
-        columnsHeader: 'columns tablesorter-header',
-        paginationParent: 'pagination',
-    },
-    'bulma': {
-        select: '',
-        selectParent: 'select',
-        searchControl: 'input',
-        columnsHeader: 'tablesorter-header',
-        button: 'button',
-        paginationParent: 'pagination is-centered',
-        paginationPervious: 'pagination-previous',
-        paginationNext: 'pagination-next'
-    }
-};
 class RdataTB {
     constructor(IdTable, Options = { RenderJSON: null,
         ShowSearch: true,
@@ -55,7 +36,26 @@ class RdataTB {
         this.PageNow = 1;
         this.ExcludeColumnExport = [];
         this.classList = {};
-        this.classList = Object.assign(Object.assign({}, dataTbThemeClass[Options.theme]), Options.classList);
+        this.dataTbThemeClass = {
+            'bootstrap': {
+                layout: 'table_layout_fixed',
+                select: 'form-select shadow-none',
+                searchControl: 'form-control shadow-none',
+                columnsHeader: 'columns tablesorter-header',
+                paginationParent: 'pagination',
+            },
+            'bulma': {
+                select: '',
+                selectParent: 'select',
+                searchControl: 'input',
+                columnsHeader: 'tablesorter-header',
+                button: 'button',
+                paginationParent: 'pagination is-centered',
+                paginationPervious: 'pagination-previous',
+                paginationNext: 'pagination-next'
+            }
+        };
+        this.classList = Object.assign(Object.assign({}, this.dataTbThemeClass[Options.theme]), Options.classList);
         this.TableElement = document.getElementById(IdTable);
         this.Options = Options;
         this.detectTyped();
@@ -180,7 +180,7 @@ class RdataTB {
                         >
                             <option value="">Download</option>
                             <option>CSV</option>
-                            <option>XLSX</option>
+                            ${this.Options.jsonToXlsx != null ? `<option>XLSX</option>` : ''}
                         </select>
                     </div>`
             : ``}
@@ -218,7 +218,7 @@ class RdataTB {
                 this.DownloadCSV();
             }
             if (downloadEl.value === 'XLSX') {
-                this.DownloadEXCEL();
+                // this.DownloadEXCEL();
             }
             downloadEl.value = '';
         };
@@ -293,14 +293,14 @@ class RdataTB {
         //get Header
         const getHead = (_a = this.TableElement) === null || _a === void 0 ? void 0 : _a.getElementsByTagName('th');
         for (let v = 0; v < getHead.length; v++) {
-            (_b = this.HeaderDataTable) === null || _b === void 0 ? void 0 : _b.push(getHead[v].innerText);
+            (_b = this.HeaderDataTable) === null || _b === void 0 ? void 0 : _b.push(getHead[v].textContent);
         }
         //get row data
         const getbody = (_c = this.TableElement) === null || _c === void 0 ? void 0 : _c.getElementsByTagName('tbody');
         for (let row = 0; row < ((getbody[0] === undefined) ? 0 : getbody[0].rows.length); row++) {
             const cellsD = [];
             for (let cellsIndex = 0; cellsIndex < getbody[0].rows[row].cells.length; cellsIndex++) {
-                cellsD.push(getbody[0].rows[row].cells[cellsIndex].innerText);
+                cellsD.push(getbody[0].rows[row].cells[cellsIndex].innerHTML);
             }
             this.RowDataTable.push(cellsD);
         }
@@ -456,6 +456,12 @@ class RdataTB {
         let DataTable = JSON.parse(JSON.stringify(this.DataTable));
         let exlude = (_a = this.Options.ExcludeColumnExport) !== null && _a !== void 0 ? _a : [];
         let head = [...this.HeaderDataTable];
+        head = head.map((item) => {
+            var tempDivElement = document.createElement("div");
+            // Set the HTML content with the given value
+            tempDivElement.innerHTML = item;
+            return tempDivElement.innerText;
+        });
         for (let x = 0; x < exlude.length; x++) {
             let indexHead = head.indexOf(exlude[x]);
             if (indexHead > -1) {
@@ -466,6 +472,12 @@ class RdataTB {
             for (let n = 0; n < exlude.length; n++) {
                 delete DataTable[x][exlude[n]];
             }
+            DataTable[x] = DataTable[x].map((item) => {
+                var tempDivElement = document.createElement("div");
+                // Set the HTML content with the given value
+                tempDivElement.innerHTML = item;
+                return tempDivElement.innerText;
+            });
         }
         return {
             "header": head,
@@ -503,24 +515,10 @@ class RdataTB {
      *
      */
     DownloadEXCEL(filename = 'Export') {
-        let data = this.MExcludeColumnExport();
-        let str = '';
-        let hed = data.header.toString();
-        str = hed + '\r\n';
-        for (let i = 0; i < data.data.length; i++) {
-            let line = '';
-            for (const index in data.data[i]) {
-                if (line != '')
-                    line += ',';
-                line += data.data[i][index];
-            }
-            str += line + '\r\n';
+        const data = this.MExcludeColumnExport();
+        if (this.Options.jsonToXlsx != null) {
+            this.Options.jsonToXlsx(data);
         }
-        const element = document.createElement('a');
-        element.href = 'data:text/xlsx;charset=utf-8,' + "\uFEFF" + encodeURIComponent(str);
-        element.target = '_blank';
-        element.download = filename + '.xlsx';
-        element.click();
     }
     /**
      *

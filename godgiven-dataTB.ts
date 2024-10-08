@@ -33,7 +33,8 @@ interface IOptions{
     fixedTable:boolean,
     sortAnimate:boolean,
     ExcludeColumnExport:Array<any>,
-    classList?: ClassListType
+    classList?: ClassListType,
+    jsonToXlsx?: Function;
 }
 
 interface IListtyped{
@@ -239,7 +240,7 @@ class RdataTB  {
                         >
                             <option value="">Download</option>
                             <option>CSV</option>
-                            <option>XLSX</option>
+                            ${this.Options.jsonToXlsx != null ? `<option>XLSX</option>` : ''}
                         </select>
                     </div>`
                     : ``
@@ -363,14 +364,14 @@ class RdataTB  {
         //get Header
         const getHead:Array<any> | any = this.TableElement?.getElementsByTagName('th');
         for (let v = 0; v < getHead.length; v++) {
-            this.HeaderDataTable?.push(getHead[v].innerText)
+            this.HeaderDataTable?.push(getHead[v].textContent)
         }
         //get row data
         const getbody:Array<any> | any = this.TableElement?.getElementsByTagName('tbody');
         for (let row = 0; row < ((getbody[0] === undefined)? 0 : getbody[0].rows.length); row++) {
             const cellsD = []
             for (let cellsIndex = 0; cellsIndex < getbody[0].rows[row].cells.length; cellsIndex++) {
-                cellsD.push(getbody[0].rows[row].cells[cellsIndex].innerText)
+                cellsD.push(getbody[0].rows[row].cells[cellsIndex].innerHTML)
             }
             this.RowDataTable.push(cellsD)
         }
@@ -533,6 +534,12 @@ class RdataTB  {
         let exlude = this.Options.ExcludeColumnExport ?? [];
         let head = [...this.HeaderDataTable]
 
+        head = head.map((item: string) => {
+            var tempDivElement = document.createElement("div");
+            // Set the HTML content with the given value
+            tempDivElement.innerHTML = item;
+            return tempDivElement.innerText;
+        });
         for(let x = 0 ; x < exlude.length ; x++){
             let indexHead = head.indexOf(exlude[x])
             if(indexHead > -1){
@@ -545,6 +552,12 @@ class RdataTB  {
              for (let n = 0; n < exlude.length; n++) {
                  delete DataTable[x][exlude[n]]
              }
+             DataTable[x] = DataTable[x].map((item: string) => {
+                var tempDivElement = document.createElement("div");
+                // Set the HTML content with the given value
+                tempDivElement.innerHTML = item;
+                return tempDivElement.innerText;
+             });
         }
         return {
             "header" : head,
@@ -585,25 +598,11 @@ class RdataTB  {
      * 
      */
      DownloadEXCEL(filename:string = 'Export'):void{
-        let data = this.MExcludeColumnExport();
-        let str = '';
-        let hed = data.header.toString();
-        str = hed + '\r\n';
-
-        for (let i = 0; i < data.data.length; i++) {
-            let line = '';
-            for (const index in data.data[i]) {
-                if (line != '') line += ','
-                line += data.data[i][index];
-            }
-            str += line + '\r\n';
+        const data = this.MExcludeColumnExport();
+        if(this.Options.jsonToXlsx != null)
+        {
+            this.Options.jsonToXlsx(data);
         }
-        
-        const element = document.createElement('a')!;
-        element.href = 'data:text/xlsx;charset=utf-8,' + "\uFEFF" + encodeURIComponent(str);
-        element.target = '_blank';
-        element.download = filename + '.xlsx';
-        element.click();
     }
 
     /**
